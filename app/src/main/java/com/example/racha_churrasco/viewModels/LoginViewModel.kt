@@ -1,10 +1,10 @@
-package com.example.app.viewModels
+package com.example.racha_churrasco.viewModels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.app.database.AppDatabase
-import com.example.app.models.User
+import com.example.racha_churrasco.database.AppDatabase
+import com.example.racha_churrasco.models.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

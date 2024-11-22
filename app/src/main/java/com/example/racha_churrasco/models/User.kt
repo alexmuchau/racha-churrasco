@@ -1,4 +1,4 @@
-package com.example.app.models
+package com.example.racha_churrasco.models
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

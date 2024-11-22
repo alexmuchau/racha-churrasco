@@ -1,11 +1,11 @@
-package com.example.app.daos
+package com.example.racha_churrasco.daos
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.RewriteQueriesToDropUnusedColumns
-import com.example.app.models.User
+import com.example.racha_churrasco.models.User
 
 @Dao
 //@RewriteQueriesToDropUnusedColumns

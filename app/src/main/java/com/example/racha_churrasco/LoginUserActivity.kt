@@ -1,4 +1,4 @@
-package com.example.app
+package com.example.racha_churrasco
 
 import android.os.Bundle
 import android.widget.Toast
@@ -8,9 +8,9 @@ import androidx.activity.viewModels
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.app.screens.LoginScreen
-import com.example.app.viewModels.LoginViewModel
-import com.example.app.viewModels.LoginViewModelContract
+import com.example.racha_churrasco.screens.LoginScreen
+import com.example.racha_churrasco.viewModels.LoginViewModel
+import com.example.racha_churrasco.viewModels.LoginViewModelContract
 import com.example.racha_churrasco.ui.theme.RachachurrascoTheme
 
 class LoginActivity : ComponentActivity() {
