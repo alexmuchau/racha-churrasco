@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">racha-churrasco</string>
+    <string name="title_activity_login_session">LoginSessionActivity</string>
+    <string name="title_activity_room_details">RoomDetailsActivity</string>
 </resources>

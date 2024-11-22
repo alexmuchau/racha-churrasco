@@ -1,45 +1,72 @@
-package com.example.app
+package com.example.racha_churrasco
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.app.ui.theme.AppTheme
 
-class LoginSessionPage : ComponentActivity() {
+class LoginSessionActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
-            AppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting3(
-                        name = "Android", modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+            LoginSessionScreen(onLogin = { roomName ->
+                val intent = Intent(this, RoomDetailsActivity::class.java)
+                intent.putExtra("ROOM_NAME", roomName)
+                startActivity(intent)
+            })
         }
     }
 }
 
 @Composable
-fun Greeting3(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!", modifier = modifier
-    )
+fun LoginSessionScreen(onLogin: (String) -> Unit) {
+    var roomName by remember { mutableStateOf("") }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "Digite o nome da sala",
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        TextField(
+            value = roomName,
+            onValueChange = { roomName = it },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text("Nome da sala") }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = {
+                if (roomName.isNotEmpty()) {
+                    onLogin(roomName)
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Entrar")
+        }
+    }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-fun GreetingPreview3() {
-    AppTheme {
-        Greeting3("Android")
-    }
+fun LoginSessionScreenPreview() {
+    LoginSessionScreen(onLogin = {})
 }
