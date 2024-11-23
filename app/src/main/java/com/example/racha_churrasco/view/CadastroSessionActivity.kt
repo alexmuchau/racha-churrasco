@@ -1,6 +1,5 @@
 package com.example.racha_churrasco.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -15,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
-import com.example.racha_churrasco.database.RachaDatabase
-import com.example.racha_churrasco.models.Session
+import com.example.racha_churrasco.components.CustomTitle
+import com.example.racha_churrasco.viewmodels.CadastroSessionViewModel
 import kotlinx.coroutines.launch
 
 class CadastroSessionActivity : ComponentActivity() {
@@ -31,9 +30,10 @@ class CadastroSessionActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun CadastroSessionScreen() {
-        var sessionName by remember { mutableStateOf("") }
         val context = LocalContext.current
-        val sessionDao = RachaDatabase.getDatabase(context).sessionDao()
+        var cadastroSessionViewModel = CadastroSessionViewModel(context)
+
+        var sessionName by remember { mutableStateOf("") }
         val activeUserId = intent.getIntExtra("activeUserId", 99)
 
         Column(
@@ -41,6 +41,7 @@ class CadastroSessionActivity : ComponentActivity() {
                 .fillMaxSize()
                 .padding(20.dp)
         ) {
+            CustomTitle("Cadastro de Churrasco")
             TextField(
                 value = sessionName,
                 onValueChange = { sessionName = it },
@@ -57,18 +58,9 @@ class CadastroSessionActivity : ComponentActivity() {
                         return@Button
                     }
 
-                    // Coroutine para salvar a sessão no banco de dados
-                    (context as CadastroSessionActivity).lifecycleScope.launch {
-                        val newSession = Session(name = sessionName)
-                        val sessionId = sessionDao.insertSession(newSession)
-
-                        Toast.makeText(context, "Sessão criada com sucesso!", Toast.LENGTH_SHORT).show()
-
-                        // Redirecionar para a tela de entrada na sessão
-                        val intent = Intent(context, SessionEntryActivity::class.java)
-                        intent.putExtra("activeUserId", activeUserId)
+                    lifecycleScope.launch {
+                        val intent = cadastroSessionViewModel.cadastroSession(sessionName, activeUserId)
                         startActivity(intent)
-                        finish()
                     }
                 },
                 modifier = Modifier.fillMaxWidth()

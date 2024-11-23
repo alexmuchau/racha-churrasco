@@ -1,6 +1,5 @@
 package com.example.racha_churrasco.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -15,8 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
-import com.example.racha_churrasco.database.RachaDatabase
-import com.example.racha_churrasco.models.User
+import com.example.racha_churrasco.components.CompletedTextField
+import com.example.racha_churrasco.components.CustomTitle
+import com.example.racha_churrasco.viewmodels.CadastroViewModel
 import kotlinx.coroutines.launch
 
 class CadastroActivity : ComponentActivity() {
@@ -31,16 +31,21 @@ class CadastroActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun CadastroScreen() {
-        var name by remember { mutableStateOf("") }
         val context = LocalContext.current
-        val userDao = RachaDatabase.getDatabase(context).userDao()
+        var cadastroViewModel = CadastroViewModel(context)
+
+        var name by remember { mutableStateOf("") }
+        val username = intent.getStringExtra("username") ?: ""
 
         Column(
-            Modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(20.dp)
+            ,
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            Text(text = "username: ${ intent.getStringExtra("username") ?: "" }")
+            CustomTitle("Cadastro")
+            CompletedTextField("username", username)
             
             TextField(
                 value = name,
@@ -57,21 +62,11 @@ class CadastroActivity : ComponentActivity() {
                         Toast.makeText(context, "Por favor, insira seu nome", Toast.LENGTH_SHORT).show()
                         return@Button
                     }
+                    val username = intent.getStringExtra("username") ?: ""
 
-                    // Coroutine para salvar o usuário no banco de dados
-                    (context as CadastroActivity).lifecycleScope.launch {
-                        val username = intent.getStringExtra("username") ?: ""
-
-                        // Criar e salvar o usuário no banco de dados
-                        val newUser = User(name = name, username = username)
-                        userDao.insertUser(newUser)
-
-                        Toast.makeText(context, "Cadastro realizado com sucesso", Toast.LENGTH_SHORT).show()
-
-                        // Navegar para a próxima tela
-                        val intent = Intent(context, LoginActivity::class.java)
+                    lifecycleScope.launch {
+                        val intent = cadastroViewModel.cadastroUser(name, username)
                         startActivity(intent)
-                        finish()
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
