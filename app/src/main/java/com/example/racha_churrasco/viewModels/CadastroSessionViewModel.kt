@@ -15,7 +15,6 @@ class CadastroSessionViewModel(private val context: Context) : ViewModel() {
     val sessionDao = RachaDatabase.getDatabase(context).sessionDao()
 
     suspend fun cadastroSession(name: String, activeUserId: Int): Intent {
-        // Coroutine to handle database query
         return withContext(Dispatchers.IO) {
             val intent: Intent
 

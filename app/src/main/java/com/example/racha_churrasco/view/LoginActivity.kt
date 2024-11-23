@@ -1,6 +1,5 @@
 package com.example.racha_churrasco.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -15,9 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.racha_churrasco.database.RachaDatabase
-import com.example.racha_churrasco.models.User
+import com.example.racha_churrasco.components.CustomTitle
 import com.example.racha_churrasco.viewmodels.LoginViewModel
 import kotlinx.coroutines.launch
 
@@ -42,6 +39,7 @@ class LoginActivity : ComponentActivity() {
                 .fillMaxSize()
                 .padding(20.dp)
         ) {
+            CustomTitle("Login")
             TextField(
                 value = username,
                 onValueChange = { username = it },
@@ -61,7 +59,6 @@ class LoginActivity : ComponentActivity() {
                     lifecycleScope.launch {
                         val intent = loginViewModel.loginUser(username)
                         startActivity(intent)
-                        finish()
                     }
                 },
                 modifier = Modifier.fillMaxWidth()

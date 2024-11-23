@@ -1,6 +1,5 @@
 package com.example.racha_churrasco.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -15,10 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
-import com.example.racha_churrasco.database.RachaDatabase
-import com.example.racha_churrasco.models.Session
+import com.example.racha_churrasco.components.CustomTitle
 import com.example.racha_churrasco.viewmodels.CadastroSessionViewModel
-import com.example.racha_churrasco.viewmodels.CadastroViewModel
 import kotlinx.coroutines.launch
 
 class CadastroSessionActivity : ComponentActivity() {
@@ -44,6 +41,7 @@ class CadastroSessionActivity : ComponentActivity() {
                 .fillMaxSize()
                 .padding(20.dp)
         ) {
+            CustomTitle("Cadastro de Churrasco")
             TextField(
                 value = sessionName,
                 onValueChange = { sessionName = it },
@@ -63,7 +61,6 @@ class CadastroSessionActivity : ComponentActivity() {
                     lifecycleScope.launch {
                         val intent = cadastroSessionViewModel.cadastroSession(sessionName, activeUserId)
                         startActivity(intent)
-                        finish()
                     }
                 },
                 modifier = Modifier.fillMaxWidth()

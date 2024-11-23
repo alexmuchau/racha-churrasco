@@ -1,22 +1,17 @@
 package com.example.racha_churrasco.view
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.lifecycleScope
+import com.example.racha_churrasco.components.CustomTitle
 import com.example.racha_churrasco.database.RachaDatabase
-import kotlinx.coroutines.launch
 
 class SessionMainActivity : ComponentActivity() {
 
@@ -41,6 +36,7 @@ class SessionMainActivity : ComponentActivity() {
                 .fillMaxSize()
                 .padding(20.dp)
         ) {
+            CustomTitle("$sessionName")
             Text("Nome da session $sessionName")
             Text("Id do usuário ativo $activeUserId")
         }

@@ -5,9 +5,7 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.example.racha_churrasco.database.RachaDatabase
-import com.example.racha_churrasco.view.CadastroActivity
 import com.example.racha_churrasco.view.CadastroSessionActivity
-import com.example.racha_churrasco.view.SessionEntryActivity
 import com.example.racha_churrasco.view.SessionMainActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

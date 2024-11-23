@@ -1,6 +1,5 @@
 package com.example.racha_churrasco.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -15,10 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
-import com.example.racha_churrasco.database.RachaDatabase
-import com.example.racha_churrasco.models.User
+import com.example.racha_churrasco.components.CompletedTextField
+import com.example.racha_churrasco.components.CustomTitle
 import com.example.racha_churrasco.viewmodels.CadastroViewModel
-import com.example.racha_churrasco.viewmodels.LoginViewModel
 import kotlinx.coroutines.launch
 
 class CadastroActivity : ComponentActivity() {
@@ -37,13 +35,17 @@ class CadastroActivity : ComponentActivity() {
         var cadastroViewModel = CadastroViewModel(context)
 
         var name by remember { mutableStateOf("") }
+        val username = intent.getStringExtra("username") ?: ""
 
         Column(
-            Modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(20.dp)
+            ,
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            Text(text = "username: ${ intent.getStringExtra("username") ?: "" }")
+            CustomTitle("Cadastro")
+            CompletedTextField("username", username)
             
             TextField(
                 value = name,
@@ -65,7 +67,6 @@ class CadastroActivity : ComponentActivity() {
                     lifecycleScope.launch {
                         val intent = cadastroViewModel.cadastroUser(name, username)
                         startActivity(intent)
-                        finish()
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
