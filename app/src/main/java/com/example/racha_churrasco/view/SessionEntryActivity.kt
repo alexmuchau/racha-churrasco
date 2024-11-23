@@ -16,6 +16,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.example.racha_churrasco.database.RachaDatabase
+import com.example.racha_churrasco.viewmodels.LoginViewModel
+import com.example.racha_churrasco.viewmodels.SessionEntryViewModel
 import kotlinx.coroutines.launch
 
 class SessionEntryActivity : ComponentActivity() {
@@ -30,9 +32,10 @@ class SessionEntryActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun SessionEntryScreen() {
-        var sessionName by remember { mutableStateOf("") }
         val context = LocalContext.current
-        val sessionDao = RachaDatabase.getDatabase(context).sessionDao()
+        var sessionEntryViewModel = SessionEntryViewModel(context)
+
+        var sessionName by remember { mutableStateOf("") }
         val activeUserId = intent.getIntExtra("activeUserId", 99)
 
         Column(
@@ -57,28 +60,10 @@ class SessionEntryActivity : ComponentActivity() {
                         return@Button
                     }
 
-                    // Coroutine para verificar o ID da sessão no banco
-                    (context as SessionEntryActivity).lifecycleScope.launch {
-                        val session = sessionDao.getSessionByName(sessionName)
-
-
-                        if (session == null) {
-                            Toast.makeText(context, "Churrasco não encontrada", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(context, CadastroSessionActivity::class.java)
-                            intent.putExtra("activeUserId", activeUserId)
-                            startActivity(intent)
-                            finish()
-                        } else {
-                            Toast.makeText(context, "Entrando na Churrasco: ${session.id_session}", Toast.LENGTH_SHORT).show()
-
-                            // Redireciona para a próxima tela (Ex.: Tela Principal da Sessão)
-                            val intent = Intent(context, SessionMainActivity::class.java)
-                            intent.putExtra("activeUserId", activeUserId)
-                            intent.putExtra("sessionId", session.id_session)
-                            intent.putExtra("sessionName", session.name)
-                            startActivity(intent)
-                            finish() // Finaliza a Activity atual
-                        }
+                    lifecycleScope.launch {
+                        val intent = sessionEntryViewModel.entrySession(sessionName, activeUserId)
+                        startActivity(intent)
+                        finish()
                     }
                 },
                 modifier = Modifier.fillMaxWidth()

@@ -15,8 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.racha_churrasco.database.RachaDatabase
 import com.example.racha_churrasco.models.User
+import com.example.racha_churrasco.viewmodels.LoginViewModel
 import kotlinx.coroutines.launch
 
 class LoginActivity : ComponentActivity() {
@@ -31,9 +33,9 @@ class LoginActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun LoginScreen() {
-        var username by remember { mutableStateOf("") }
         val context = LocalContext.current
-        val userDao = RachaDatabase.getDatabase(context).userDao()
+        var loginViewModel = LoginViewModel(context)
+        var username by remember { mutableStateOf("") }
 
         Column(
             Modifier
@@ -56,25 +58,10 @@ class LoginActivity : ComponentActivity() {
                         return@Button
                     }
 
-                    // Coroutine to handle database query
-                    (context as LoginActivity).lifecycleScope.launch {
-                        val user = userDao.getUserByUsername(username)
-                        if (user == null) {
-                            Toast.makeText(context, "Usuário não encontrado", Toast.LENGTH_SHORT).show()
-
-                            // Example: Navigate to the next screen
-                            val intent = Intent(context, CadastroActivity::class.java)
-                            intent.putExtra("username", username)
-                            startActivity(intent)
-                            finish()
-                        } else {
-                            Toast.makeText(context, "Usuário encontrado - ${user.name}", Toast.LENGTH_SHORT).show()
-
-                            val intent = Intent(context, SessionEntryActivity::class.java)
-                            intent.putExtra("activeUserId", user.id_user)
-                            startActivity(intent)
-                            finish()
-                        }
+                    lifecycleScope.launch {
+                        val intent = loginViewModel.loginUser(username)
+                        startActivity(intent)
+                        finish()
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
