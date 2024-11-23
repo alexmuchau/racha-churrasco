@@ -1,12 +1,12 @@
-package com.example.app.models
+package com.example.racha_churrasco.models
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "users")
 data class User(
-    @PrimaryKey
-    @ColumnInfo(name = "username")
-    val username: String
+    @PrimaryKey(autoGenerate = true) val id_user: Int = 0,
+    val name: String,
+    val username: String,
+    val id_session: String? = null
 )

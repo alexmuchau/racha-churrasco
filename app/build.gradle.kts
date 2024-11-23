@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
@@ -51,7 +52,7 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:$versao")
     ksp("androidx.room:room-compiler:$versao")
     implementation("androidx.room:room-ktx:$versao")
-
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
