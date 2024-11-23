@@ -1,29 +1,35 @@
-package com.example.racha_churrasco.viewModels
+package com.example.racha_churrasco.viewmodels
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.racha_churrasco.database.AppDatabase
 import com.example.racha_churrasco.models.User
-import kotlinx.coroutines.Dispatchers
+import com.example.racha_churrasco.repositories.UserRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-interface LoginViewModelContract {
-    fun handleLogin(username: String, onResult: (Boolean, String) -> Unit)
-}
 
-class LoginViewModel(application: Application) : AndroidViewModel(application), LoginViewModelContract {
-    private val userDao = AppDatabase.getInstance(application).userDao()
+class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
 
-    override fun handleLogin(username: String, onResult: (Boolean, String) -> Unit) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val user = userDao.getUser(username)
-            if (user == null) {
-                userDao.insertUser(User(username))
-                onResult(true, "Usuário criado e logado com sucesso!")
+    private val _loginResult = MutableStateFlow<LoginState>(LoginState.Idle)
+    val loginResult: StateFlow<LoginState> = _loginResult
+
+    fun login(username: String) {
+        viewModelScope.launch {
+            val user = userRepository.getUserByUsername(username)
+            if (user != null) {
+                _loginResult.value = LoginState.ExistingUser(user)
             } else {
-                onResult(true, "Bem-vindo de volta, $username!")
+                val newUser = User(name = "Usuário $username", username = username)
+                userRepository.insertUser(newUser)
+                _loginResult.value = LoginState.NewUser(newUser)
             }
         }
+    }
+
+    sealed class LoginState {
+        object Idle : LoginState()
+        data class ExistingUser(val user: User) : LoginState()
+        data class NewUser(val user: User) : LoginState()
     }
 }

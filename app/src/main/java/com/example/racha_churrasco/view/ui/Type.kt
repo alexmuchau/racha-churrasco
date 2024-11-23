@@ -1,4 +1,4 @@
-package com.example.racha_churrasco.ui.theme
+package com.example.racha_churrasco.view.ui
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

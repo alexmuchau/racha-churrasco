@@ -1,4 +1,4 @@
-package com.example.racha_churrasco.ui.theme
+package com.example.racha_churrasco.view.ui
 
 import android.app.Activity
 import android.os.Build
