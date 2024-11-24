@@ -11,5 +11,14 @@ interface ItemDao {
     suspend fun getItemsBySession(sessionId: Int): List<Item>
 
     @Insert
-    suspend fun insertItem(item: Item)
+    suspend fun insert(item: Item)
+
+    @Update
+    suspend fun update(item: Item)
+
+    @Delete
+    suspend fun delete(item: Item)
+
+    @Query("SELECT * FROM items")
+    fun getAllItems(): LiveData<List<Item>>
 }
