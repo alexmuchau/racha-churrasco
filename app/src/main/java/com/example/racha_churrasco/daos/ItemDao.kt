@@ -1,13 +1,16 @@
 package com.example.racha_churrasco.daos
 
-import androidx.lifecycle.LiveData
-import androidx.room.*
-
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
 import com.example.racha_churrasco.models.Item
 
 @Dao
 interface ItemDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Query("SELECT * FROM items WHERE sessionId = :sessionId")
+    suspend fun getItemsBySession(sessionId: Int): List<Item>
+
+    @Insert
     suspend fun insert(item: Item)
 
     @Update

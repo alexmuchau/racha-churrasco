@@ -8,15 +8,15 @@ import com.example.racha_churrasco.models.Session
 @Dao
 interface SessionDao {
 
-    @Query("SELECT * FROM tb_session WHERE id_session = :id LIMIT 1")
-    suspend fun getSessionById(id: Int): Session?
+    @Query("SELECT * FROM tb_session WHERE name = :sessionName LIMIT 1")
+    suspend fun getSessionByName(sessionName: String): Session?
 
-    @Query("SELECT * FROM tb_session WHERE name = :name LIMIT 1")
-    suspend fun getSessionByName(name: String): Session?
-
-    @Insert
-    suspend fun insertSession(session: Session): Long
+    @Query("SELECT * FROM tb_session WHERE id_session = :sessionId")
+    suspend fun getSessionById(sessionId: Int): Session?
 
     @Query("SELECT * FROM tb_session")
     suspend fun getAllSessions(): List<Session>
+
+    @Insert
+    suspend fun insertSession(session: Session): Long
 }

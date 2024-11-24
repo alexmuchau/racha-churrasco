@@ -8,5 +8,5 @@ data class User(
     @PrimaryKey(autoGenerate = true) val id_user: Int = 0,
     val name: String,
     val username: String,
-    val id_session: String? = null
+    val sessionId: Int? = null // Relacionamento com a sessão
 )
