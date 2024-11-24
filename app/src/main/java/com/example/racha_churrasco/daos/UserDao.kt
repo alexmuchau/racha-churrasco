@@ -7,6 +7,8 @@ import com.example.racha_churrasco.models.User
 
 @Dao
 interface UserDao {
+    @Query("SELECT * FROM users WHERE sessionId = :sessionId")
+    suspend fun getUsersBySession(sessionId: Int): List<User>
 
     @Query("SELECT * FROM users WHERE username = :username LIMIT 1")
     suspend fun getUserByUsername(username: String): User?

@@ -1,72 +1,110 @@
 package com.example.racha_churrasco.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
-import com.example.racha_churrasco.components.CustomTitle
-import com.example.racha_churrasco.viewmodels.SessionEntryViewModel
+import com.example.racha_churrasco.database.RachaDatabase
+import com.example.racha_churrasco.models.User
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SessionEntryActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             SessionEntryScreen()
         }
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun SessionEntryScreen() {
-        val context = LocalContext.current
-        var sessionEntryViewModel = SessionEntryViewModel(context)
+        val sessionDao = RachaDatabase.getDatabase(this).sessionDao()
+        val userDao = RachaDatabase.getDatabase(this).userDao()
 
+        val activeUserName = intent.getStringExtra("activeUserName") ?: "Desconhecido" // Nome real do usuário
         var sessionName by remember { mutableStateOf("") }
-        val activeUserId = intent.getIntExtra("activeUserId", 99)
 
         Column(
-            Modifier
+            modifier = Modifier
                 .fillMaxSize()
-                .padding(20.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            CustomTitle("Login de Churrasco")
-            Text("Usuário ativo: $activeUserId")
             TextField(
                 value = sessionName,
                 onValueChange = { sessionName = it },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(text = "Nome do Churrasco") }
+                label = { Text("Nome da Sessão") },
+                modifier = Modifier.fillMaxWidth()
             )
-
-            Spacer(modifier = Modifier.height(20.dp))
 
             Button(
                 onClick = {
                     if (sessionName.isBlank()) {
-                        Toast.makeText(context, "Por favor, insira o Nome do Churrasco", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@SessionEntryActivity, "Digite o nome da sessão", Toast.LENGTH_SHORT).show()
                         return@Button
                     }
 
                     lifecycleScope.launch {
-                        val intent = sessionEntryViewModel.entrySession(sessionName, activeUserId)
-                        startActivity(intent)
+                        withContext(Dispatchers.IO) {
+                            val session = sessionDao.getSessionByName(sessionName)
+
+                            if (session == null) {
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(
+                                        this@SessionEntryActivity,
+                                        "Sessão não encontrada. Crie uma nova!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                                val intent = Intent(this@SessionEntryActivity, CadastroSessionActivity::class.java).apply {
+                                    putExtra("activeUserName", activeUserName)
+                                    putExtra("sessionName", sessionName)
+                                }
+                                startActivity(intent)
+                            } else {
+                                // Verifica se o usuário já está associado à sessão
+                                val userInSession = userDao.getUsersBySession(session.id_session)
+                                    .find { it.name == activeUserName }
+
+                                if (userInSession == null) {
+                                    // Adiciona o usuário à sessão
+                                    userDao.insertUser(
+                                        User(
+                                            name = activeUserName,
+                                            username = activeUserName,
+                                            sessionId = session.id_session
+                                        )
+                                    )
+                                }
+
+                                val intent = Intent(this@SessionEntryActivity, SessionMainActivity::class.java).apply {
+                                    putExtra("sessionId", session.id_session)
+                                    putExtra("sessionName", session.name)
+                                }
+                                withContext(Dispatchers.Main) {
+                                    startActivity(intent)
+                                    finish()
+                                }
+                            }
+                        }
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "Entrar")
+                Text("Entrar na Sessão")
             }
         }
     }
