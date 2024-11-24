@@ -17,6 +17,10 @@
 <!--            android:exported="false"-->
 <!--            android:label="@string/title_activity_room_details"-->
 <!--            android:theme="@style/Theme.Rachachurrasco" />-->
+        <activity android:name=".view.ui.ItemActivity">
+            <!-- Aqui você pode adicionar outros atributos ou intenções, se necessário -->
+        </activity>
+
         <activity
             android:name=".view.SessionMainActivity"
             android:exported="false"

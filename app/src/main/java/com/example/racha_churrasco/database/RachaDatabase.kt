@@ -6,14 +6,17 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.racha_churrasco.daos.SessionDao
 import com.example.racha_churrasco.daos.UserDao
+import com.example.racha_churrasco.daos.ItemDao
+import com.example.racha_churrasco.models.Item
 import com.example.racha_churrasco.models.Session
 import com.example.racha_churrasco.models.User
 
-@Database(entities = [User::class, Session::class], version = 2, exportSchema = false)
+@Database(entities = [User::class, Session::class, Item::class], version = 3, exportSchema = false)
 abstract class RachaDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
     abstract fun sessionDao(): SessionDao // Adicione a nova DAO
+    abstract fun itemDao(): ItemDao
 
     companion object {
         @Volatile
