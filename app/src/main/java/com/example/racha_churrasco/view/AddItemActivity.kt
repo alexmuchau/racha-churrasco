@@ -82,7 +82,7 @@ class AddItemActivity : ComponentActivity() {
                                 sessionId = sessionId
                             )
 
-                            itemDao.insertItem(item)
+                            itemDao.insert(item)
                             setResult(Activity.RESULT_OK) // Retorna o resultado para a Activity anterior
                             Toast.makeText(this@AddItemActivity, "Item adicionado com sucesso", Toast.LENGTH_SHORT).show()
                             finish()

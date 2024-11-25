@@ -13,7 +13,7 @@ import com.example.racha_churrasco.models.Session
 
 @Database(
     entities = [Session::class, Item::class, User::class],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class RachaDatabase : RoomDatabase() {

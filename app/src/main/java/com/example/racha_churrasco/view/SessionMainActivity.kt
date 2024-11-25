@@ -83,7 +83,7 @@ class SessionMainActivity : ComponentActivity() {
             // Botão para adicionar itens
             Button(
                 onClick = {
-                    val intent = Intent(this@SessionMainActivity, AddItemActivity::class.java).apply {
+                    val intent = Intent(this@SessionMainActivity, ItemActivity::class.java).apply {
                         putExtra("sessionId", sessionId)
                     }
                     addItemLauncher.launch(intent)
