@@ -19,7 +19,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.racha_churrasco.viewmodels.ItemViewModel
 
 class ItemActivity : ComponentActivity() {
+    private var sessionId: Int = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        sessionId = intent.getIntExtra("sessionId", -1)
         super.onCreate(savedInstanceState)
         setContent {
             ItemScreen()
@@ -101,7 +104,7 @@ class ItemActivity : ComponentActivity() {
                         modoEditar = false
                         textoBotao = "Salvar"
                     } else { // Senão, vamos salvar o item
-                        retorno = itemViewModel.salvarItem(nomeItem, valorItem)
+                        retorno = itemViewModel.salvarItem(nomeItem, valorItem, sessionId, responsable)
                     }
 
                     Toast.makeText(
@@ -123,7 +126,7 @@ class ItemActivity : ComponentActivity() {
 
             LazyColumn {
                 items(listaItems) { item ->
-                    Text(text = "${item.name} (${item.price})",
+                    Text(text = "${item.name} (R$${item.price})",
                         modifier = Modifier.fillMaxWidth(),
                         fontSize = 18.sp)
 

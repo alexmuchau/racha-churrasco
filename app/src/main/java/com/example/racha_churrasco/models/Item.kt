@@ -8,6 +8,6 @@ data class Item(
     @PrimaryKey(autoGenerate = true) val id_item: Int = 0,
     val name: String,
     val price: Double,
-    val responsible: String,
-    val sessionId: Int // Relacionamento com a sessão
+    val responsible: Int,
+    val sessionId: Int
 )
