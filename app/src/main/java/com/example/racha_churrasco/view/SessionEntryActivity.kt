@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
+import com.example.racha_churrasco.components.CustomTitle
 import com.example.racha_churrasco.database.RachaDatabase
 import com.example.racha_churrasco.models.User
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +35,7 @@ class SessionEntryActivity : ComponentActivity() {
         val sessionDao = RachaDatabase.getDatabase(this).sessionDao()
         val userDao = RachaDatabase.getDatabase(this).userDao()
 
-        val activeUserName = intent.getStringExtra("activeUserName") ?: "Desconhecido" // Nome real do usuário
+        val activeUserId = intent.getIntExtra("activeUserId", 0) // Nome real do usuário
         var sessionName by remember { mutableStateOf("") }
 
         Column(
@@ -43,6 +44,8 @@ class SessionEntryActivity : ComponentActivity() {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            CustomTitle("Entre no seu churrasco!")
+
             TextField(
                 value = sessionName,
                 onValueChange = { sessionName = it },
@@ -70,29 +73,27 @@ class SessionEntryActivity : ComponentActivity() {
                                     ).show()
                                 }
                                 val intent = Intent(this@SessionEntryActivity, CadastroSessionActivity::class.java).apply {
-                                    putExtra("activeUserName", activeUserName)
+                                    putExtra("activeUserName", activeUserId)
                                     putExtra("sessionName", sessionName)
                                 }
                                 startActivity(intent)
                             } else {
                                 // Verifica se o usuário já está associado à sessão
                                 val userInSession = userDao.getUsersBySession(session.id_session)
-                                    .find { it.name == activeUserName }
+                                    .find { it.id_user == activeUserId }
 
                                 if (userInSession == null) {
                                     // Adiciona o usuário à sessão
-                                    userDao.insertUser(
-                                        User(
-                                            name = activeUserName,
-                                            username = activeUserName,
-                                            sessionId = session.id_session
-                                        )
+                                    userDao.updateUser(
+                                        user_id = activeUserId,
+                                        session_id = session.id_session
                                     )
                                 }
 
                                 val intent = Intent(this@SessionEntryActivity, SessionMainActivity::class.java).apply {
                                     putExtra("sessionId", session.id_session)
                                     putExtra("sessionName", session.name)
+                                    putExtra("activeUserId", activeUserId)
                                 }
                                 withContext(Dispatchers.Main) {
                                     startActivity(intent)

@@ -14,10 +14,6 @@ import androidx.compose.ui.unit.sp
 fun CustomTitle(text: String) {
     Text(
         text=text,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-        ,
         fontSize = 58.sp,
         fontWeight = FontWeight.Bold,
         textAlign = TextAlign.Center

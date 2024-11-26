@@ -53,6 +53,9 @@ dependencies {
     ksp("androidx.room:room-compiler:$versao")
     implementation("androidx.room:room-ktx:$versao")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.24.13-rc")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
